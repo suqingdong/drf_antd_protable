@@ -1,0 +1,7 @@
+.vscode
+*py[cdo]
+__pycache__
+build
+dist
+*egg-info
+*.sh
