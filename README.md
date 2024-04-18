@@ -9,7 +9,7 @@ python3 -m pip install -U drf-antd-protable
 
 ## Usage
 
-1. use in `viewsets`
+#### 1. use as `viewsets`
 
 ```python
 # views.py
@@ -36,48 +36,76 @@ urlpatterns = [
 ]
 ```
 
+#### 2. supporting columns configuration
+- `hidden_fields`
+- `select_fields`
+- `sorter_fields`
+- `copyable_fields`
+- `not_search_fields`
+- `render_region_fields`
+- `render_compare_fields`
+- `verbose_name_map`
+
+example
+
+```python
+class MyTableViewSet(ProTableViewSet):
+    queryset = models.QA.objects.all()
+    serializer_class = serializers.QA_Serializer
+
+    hidden_fields = ['id']
+    select_fields = ['department']
+    sorter_fields = ['user', 'question']
+    copyable_fields = ['anwser']
+    not_search_fields = ['department']
+    render_region_fields = ['size']
+    render_compare_fields = ['count']
+    verbose_name_map = {
+        'size': '大小',
+        'count': '数量',
+    }
+```
+
 ## Endpoints
 
 - `demo_table/columns/`
-![](src/columns.png)
+![](https://suqingdong.github.io/drf_antd_protable/src/columns.png)
 
 - `demo_table/data/`
-![](src/data.png)
+![](https://suqingdong.github.io/drf_antd_protable/src/data.png)
 
 - `demo_table/export/`
-![](src/export.png)
+![](https://suqingdong.github.io/drf_antd_protable/src/export.png)
 
 
 ## Use in Frontend
-```tsx
+```jsx
 import { ProTable } from '@ant-design/pro-components'
 import { useRequest } from 'ahooks'
+import { request } from '@umijs/max'
 
 const DemoTable = () => {
-    const columnsRequest = useRequest(async () => {
-        const data = await fetch('/api/demo_table/columns/')
-        return data
-    })
+    const columnsRequest = useRequest(async () => request('/api/demo_table/columns/'))
+
     return (
         <ProTable
             columns={columnsRequest.data}
-            request={async (params, sort, filter) => {
+            request={async (params, sorter, filter) => {
                 const { current, pageSize, keyword, ...search } = params;
-                const apiParams = {
-                    sort: sort,
-                    filter: filterWithoutNull,
+                const payload = {
+                    sort: sorter,
+                    filter: filter,
                     search: search,
                     globalSearch: keyword,
                 };
-                const data = await fetch('/api/demo_table/data/', {
+                const data = await request('/api/demo_table/data/', {
                     method: 'POST',
-                    data: apiParams,
-                    params: {current, pageSize},
+                    data: payload,
+                    params: { current, pageSize },
                 })
                 return data
             }}
         />
-    );
+    )
 }
-
 ```
