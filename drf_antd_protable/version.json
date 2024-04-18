@@ -1,8 +1,8 @@
 {
     "prog": "drf_antd_protable",
     "desc": "Automates DRF APIs for Ant Design ProTable",
-    "url": "https://github.com/suqingdong/PROJECTNAME",
+    "url": "https://github.com/suqingdong/drf_antd_protable",
     "author": "suqingdong",
     "author_email": "suqingdong1114@gmail.com",
-    "version": "1.0.0"
+    "version": "1.0.1"
 }
